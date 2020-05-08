@@ -147,3 +147,5 @@ def LFSR2(n):
 On trouve alors le flag coupé en trois morceaux sur trois paquets différents.
 
 [Ce lien](http://summit.sfu.ca/system/files/iritems1/12931/etd7784_CKilgour.pdf) explique aussi assez bien la méthode globale mais ne rentre pas assez dans les détails je trouve. [RIEN NE VAUT 3000 pages de doc.](https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=478726)
+
+[N'hésitez pas à voir ce write-up pour plus de détails techniques de physique du signal !](https://github.com/tchup-dev/FCSC-2020)
