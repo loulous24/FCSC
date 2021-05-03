@@ -92,9 +92,9 @@ for x in range(x_dim):
 
 On obtient cette simplification
 
-![Easy maze](./maze_1.png)
+![Easy maze](images/maze_1.png)
 
-![Complex maze](./maze_2.png)
+![Complex maze](images/maze_2.png)
 
 #### Le parcours de graphe
 

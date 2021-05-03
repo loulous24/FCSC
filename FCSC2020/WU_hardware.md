@@ -74,15 +74,15 @@ plt.plot(data)
 
 On ne voit pas grand chose en temporel à part que la capture est trop grande. On peut la recouper avec Audacity en important des données RAW sur deux canaux (on est en complexe) et 32 bit (la partie réelle et imaginaire sont des float 32 bits). Sur le graphe fréquentiel, on voit clairement cinq canaux de largeur On comprend ainsi mieux le titre du challenge. De plus, chaque canaux comprend deux fréquences. On pense donc tout de suite à de la modulation FSK.
 
-![Spectral analysis scandaleux](./spectral_scandaleux.png)
+![Spectral analysis scandaleux](images/spectral_scandaleux.png)
 
 Gnu radio ne marchant pas très bien chez moi, je suis obligé de générer un fichier python et de le lancer dans un terminal. Cela me permettra plus tard avec quelques modifications d'automatiser le décodage sur les 5 canaux en même temps. Pour éliminer le bruit hors du signal initial, je place un squech au début. Il permet de réduire à 0 un signal trop faible. Ensuite je sélectionne le canal et je le translate pour faire un démodulation avec Quadrature Demod. Le signal doit toujours rester complexe avant la démodulation car il a des fréquences négatives. Je passe un filtre passe bas pour éliminer les résidus de la démodulation.
 
-![Gnu radio scandaleux](./scandaleux_gnu_radio.png)
+![Gnu radio scandaleux](images/scandaleux_gnu_radio.png)
 
 On obtient un nouveau signal dans python, rebelote, on trace le spectre et le signal temporel. Ici seul le signal temporel est intéressant. On remarque que ce signal est binaire donc on approche du but. Une analyse de stéganographie classique à base de mesure du nombre de bigrammes et de trigrammes que 000 et 111 n'apparaissent jamais si on décode en tout ou rien directement. Quelques recherches en encodage mènent sur la piste du Manchester code. J'ai représenté en noir chaque bloc contenant un symbole et en vert les 0 et en rouge les 1.
 
-![Manchester code](./temporel_scandaleux.png)
+![Manchester code](images/temporel_scandaleux.png)
 
 Il ne reste plus qu'à décoder les caractères en Unicode. Quatre des cinq canaux contenaient des références à la pop culture en terme d'ouverture de porte. Le dernier contenait le flag.
 
@@ -104,17 +104,17 @@ while iChange + 75 < len(data_quant):
 
 On entre dans le dur avec celui là !! Le début est similaire à ce que j'ai fait pour le précédent, on trace le spectre et le signal temporel. On peut le voir aussi avec `audacity` ou avec `baudline` en exportant en `.wav` dans Audacity.
 
-![Spectral BLE](./spectre_ble.png)
+![Spectral BLE](images/spectre_ble.png)
 
 On remarque de nombreux paquets en fréquentiel, on les retrouve en temporel et on se rend compte que chaque paquet a une fréquence qui change. C'est tout à fait normal après la lecture de la [documentation de bluetooth](https://www.mouser.it/pdfdocs/bluetooth-Core-v50.pdf). On peut se restreindre à la partie sur Bluetooth Low Energy, c'est très instructif. Il s'agit en fait du processus de frequency hopping. Cela consiste à changer de canal de fréquence à chaque paquet. Le seul moyen de le décoder est de capturer l'ensemble du spectre de Bluetooth en même temps, d'où la désactivation du filtre anti-repliement dans la capture du fichier. Bien que le théorème de Shanon-Nyquist nous interdit d'avoir des fréquences en-deçà de -f_e/2 et au delà de f_e/2. Donc ici en dessous de 2471 MHz et au dessus de 2451 MHz. Replier nous permet de choper les autres fréquences.
 
 La méthode de décodage de la GFSK (utilisée par Bluetooth) est sensiblement la même que la FSK avec Gnu Radio. Voici le nouveau flowgraph que j'ai utilisé, il ressemble beaucoup au précédent. Seul la présence d'un squelch est à noter. Il permet de couper et de mettre à 0 un signal qui ne dépasse pas un certain seuil. Ça évite le bruit en sortie du Quadrature Demod.
 
-![Gnu Radio BLE](./ble_gnu_radio.png)
+![Gnu Radio BLE](images/ble_gnu_radio.png)
 
 Le signal qu'on obtient en sortie est assez propre et on reconnaît même la trame de bluetooth constitué de 0 et de 1.
 
-![Temporel BLE](./temporel_ble.png)
+![Temporel BLE](images/temporel_ble.png)
 
 Certains des paquets font 80 bits et d'autre beaucoup plus. Quand on regarde la trame avec des recherches (ou dans la doc, lisez-là c'est très intéressant), on remarque que les paquets de 80 bits de correspondent à aucune donnée utile ici. Seuls ceux de plus de bits nous intéressent. Il y en a 6 et on remarque qu'ils ont tous été envoyé dans les fréquences correspondant aux canaux d'annonces. On comprend maintenant une partie de l'énoncé.
 
