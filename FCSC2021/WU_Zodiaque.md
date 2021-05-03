@@ -8,7 +8,7 @@
 
 C'est un challenge de radio un peu sympa, on est là pour s'amuser, c'est parti !!
 
-Pour voir les bases de l'analyse du signal, je vous conseille d'aller voir mon [WU du concours de l'année dernière sur les challenges hardware du FCSC](https://github.com/loulous24/FCSC/FCSC2020/WU_hardware.md). Je vais réexpliquer certaines choses ici mais ça donne un bon complément.
+Pour voir les bases de l'analyse du signal, je vous conseille d'aller voir mon [WU du concours de l'année dernière sur les challenges hardware du FCSC](https://github.com/loulous24/FCSC/blob/master/FCSC2020/WU_hardware.md). Je vais réexpliquer certaines choses ici mais ça donne un bon complément.
 
 Comme d'habitude, la première chose à faire est de regarder l'allure du signal. On peut regarder ça avec python de cette façon. Cependant, `baudline` ou `inspectrum` sont de petits outils assez simples pour avoir une première vue du challenge. Savoir faire l'affichage sur python reste important
 
