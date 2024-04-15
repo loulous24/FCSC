@@ -1,12 +1,12 @@
-# **FCSC 2023 - Write-up**
+# **FCSC 2023 - Write-ups**
 
-*Par loulous24*
+*By loulous24*
 
 ## **Contexte**
 
-This is some write-ups written for the FCSC 2023. It is the French National CTF for the qualification in the French Team. It is organised by ANSSI.
+These are some write-ups written for the FCSC 2023. It is the French National CTF for the qualification in the French Team. It is organised by ANSSI.
 
-I got flags in all of the hardware challenges, all except one misc some pwn and other stuff. Do not hesitate to send me a message if you have a question.
+I got the flags of all the hardware challenges, all except one misc some pwn and other stuff. Do not hesitate to send me a message if you have a question.
 
 ![Meme inspiration](wu_files/inspiration.jpg)
 

@@ -264,6 +264,7 @@ So this was a really nice challenge ! A big thanks to `erdnaxe` for the challeng
 
 To sum up, I would leave this to keep in mind the boot process.
 
+```
 Boot firmware (OpenSBI and the Hypervisor level)
 |||||||||||||
 vvvvvvvvvvvvv
@@ -274,17 +275,18 @@ Linux kernel  (Mounts the file system and runs init)
 ||||||||||||
 vvvvvvvvvvvv
    /init      (Starts the services)
+```
 
 ## Great harbours to get information
 
-[A useful question to explain why using binwalk](https://unix.stackexchange.com/questions/163346/why-is-it-that-my-initrd-only-has-one-directory-namely-kernel)
-[List of kernel parameters for 5.15 kernel](https://www.kernel.org/doc/html/v5.15/admin-guide/kernel-parameters.html)
-[Explanation of what is a flattened device tree](https://stackoverflow.com/questions/21808984/what-is-the-use-of-flattened-device-tree-linux-kernel)
-[Guide about Linux on U-boot boot process](https://www.embeddedartists.com/wp-content/uploads/2019/03/iMX_Working_with_Linux_and_uboot.pdf)
-[The U-Boot documentation](https://u-boot.readthedocs.io/en/latest/)
-[Telnet protocol specification](https://www.rfc-editor.org/rfc/rfc854.html)
-[Telnet protocol explanation](https://users.cs.cf.ac.uk/Dave.Marshall/Internet/node141.html)
-[A possible playground for U-boot with QEMU](https://tech.io/playgrounds/84444/running-u-boot-linux-kernel-in-qemu/prologue)
+- [A useful question to explain why using binwalk](https://unix.stackexchange.com/questions/163346/why-is-it-that-my-initrd-only-has-one-directory-namely-kernel)
+- [List of kernel parameters for 5.15 kernel](https://www.kernel.org/doc/html/v5.15/admin-guide/kernel-parameters.html)
+- [Explanation of what is a flattened device tree](https://stackoverflow.com/questions/21808984/what-is-the-use-of-flattened-device-tree-linux-kernel)
+- [Guide about Linux on U-boot boot process](https://www.embeddedartists.com/wp-content/uploads/2019/03/iMX_Working_with_Linux_and_uboot.pdf)
+- [The U-Boot documentation](https://u-boot.readthedocs.io/en/latest/)
+- [Telnet protocol specification](https://www.rfc-editor.org/rfc/rfc854.html)
+- [Telnet protocol explanation](https://users.cs.cf.ac.uk/Dave.Marshall/Internet/node141.html)
+- [A possible playground for U-boot with QEMU](https://tech.io/playgrounds/84444/running-u-boot-linux-kernel-in-qemu/prologue)
 
 
 ## Logbook of the captain
