@@ -6,7 +6,7 @@ Write-up by *loulous24* **CC-BY-NC-SA 4.0**
 
 ## Listening to the grotto
 
-Sésame, ouvre-toi, Open sesame! in English, is a series of two hardware challenges of the FCSC 2024. Let's take a look at the descriptions (in French).
+"Sésame, ouvre-toi", "Open sesame!" in English, is a series of two hardware challenges of the FCSC 2024. Let's take a look at the descriptions (in French).
 
 #### Sésame, ouvre-toi
 
@@ -72,7 +72,7 @@ After 10 seconds, something is booted.
     Booting /MemoryMapped(0x0,0x40200040,0xfb000)
 ```
 
-It appears that it is an [UEFI](https://en.wikipedia.org/wiki/UEFI) Shell (also something from the project Das U-Boot).
+It appears that it is an [UEFI](https://en.wikipedia.org/wiki/UEFI) Shell from [EDK II](https://github.com/tianocore/tianocore.github.io/wiki/ShellPkg).
 
 ```
     UEFI Interactive Shell v2.2
@@ -83,17 +83,17 @@ It appears that it is an [UEFI](https://en.wikipedia.org/wiki/UEFI) Shell (also 
     Shell>
 ```
 
-During the 10 seconds even if I try to write some characters, nothing appens and the UEFI boots every time. The goal is probably to send the password to have a bootloader shell.
+During the 10 seconds even if I try to write some characters, nothing happens and the UEFI boots every time. The goal is probably to send the password to have a bootloader shell.
 
 ![Let me in](./wu_files/let_me_in.jpg)
 
 To make it simple, the process of starting a computer is quite complex and requires a lot of steps. It is very low-level.
 
-A quick recall, the bootloader is the first process to be loaded in memory and executed. It is often very tiny and in a different hardware piece than the hard drive (such as a non-volatile memory as a ROM, EEPROM or NOR flash). Its task is to initialise other pieces of software and to make them run. So here we have a 2 stages bootloading process.
+A quick recall, the bootloader is the first process to be loaded in memory and executed. It is often very tiny and in a different hardware piece than the hard drive (such as a non-volatile memory as a ROM, EEPROM or NOR flash). Its task is to initialise other pieces of software and to make them run. So here we have a 2-stages bootloading process.
 
-The first stage is the bootlader by itself and the second stage is the UEFI (which do not launch another image).
+The first stage is the bootloader by itself and the second stage is the UEFI (which do not launch another image).
 
-One cool thing is that U-Boot stores its config parameters directly inside the bootlader so by doing a `strings bootloader.bin`, it is possible to find some interesting informations.
+One cool thing is that U-Boot stores its configuration parameters directly inside the bootloader so by doing a `strings bootloader.bin`, it is possible to find some interesting information.
 
 ```
     bootargs=-delay 0
@@ -116,7 +116,7 @@ One cool thing is that U-Boot stores its config parameters directly inside the b
     scriptaddr=0x40200000
 ```
 
-So it is an ARM architecture and the code at address `0x40200000` is booted. After an exit, it is poweredoff (so it is not possible to go back to the bootloader).
+So it is an ARM architecture and the code at address `0x40200000` is booted. After an exit, it is powered off (so it is not possible to go back to the bootloader).
 
 ## Inspecting the fist door
 
@@ -124,7 +124,7 @@ For the first challenge, I have done a decompilation of the bootloader using Ghi
 
 So, after opening it in Ghidra with family AARCH64 and little-endian, it is possible to see the password in clear text among the strings. I supposed the cross-reference was a reference from the main function. 
 
-The code arround the string `FAKEPASSWORD` looks like that.
+The code around the string `FAKEPASSWORD` looks like that.
 
 ``` c
     printf((byte *)s_Autoboot_in_%d_seconds_00064fa3);
@@ -205,9 +205,9 @@ The code arround the string `FAKEPASSWORD` looks like that.
     } while (uVar6 <= (ulong)(lVar9 + (int)uVar3 * lVar7));
 ```
 
-So there are two keys, a stop key and a delay key and `FAKEPASSWORD` is hardcoded as the default stopkey. After that, it is a piece of code that takes the n last characters entered and compares them with the stop key or the delay key.
+So there are two keys, a stop key and a delay key and `FAKEPASSWORD` is hard-coded as the default stop key. After that, it is a piece of code that takes the n last characters entered and compares them with the stop key or the delay key.
 
-So the key is perhaps stored inside the bootloader on the server. But is it possible to have an access to it ?
+So the key is perhaps stored inside the bootloader on the server. But is it possible to have access to it ?
 
 This is where the UEFI makes an appearance!!
 
@@ -316,23 +316,23 @@ The flag can be obtained with another command that gives.
 
 ![Vault](./wu_files/vault.jpg)
 
-So back again with a second bootloader. Same protocol, puting it into Ghidra. Now it is looking for a parameter named `bootstopkeysha256`. It is possible to find a sha256 string `b2986a18ce759031c3215a13d01f8290193b2dac8556a7b4a784197955806310` which is the SHA256 of the string `FAKEPASSWORD`. The rest of the code is also looking for characters, there is several hash functions defined inside the bootloader and a array of struct pointing to these functions. The code here is using the function `sha256`.
+So back again with a second bootloader. Same protocol, putting it into Ghidra. Now it is looking for a parameter named `bootstopkeysha256`. It is possible to find a sha256 string `b2986a18ce759031c3215a13d01f8290193b2dac8556a7b4a784197955806310` which is the SHA256 of the string `FAKEPASSWORD`. The rest of the code is also looking for characters, there is several hash functions defined inside the bootloader and an array of struct pointing to these functions. The code here is using the function `sha256`.
 
-I extracted part of the remote bootloader to see its secrets. The remote sha256 is `12eb7b15dc2f4aed25371a49f3048c56fda5eacb600196e3f5aa842757412c7e` and the printflag command is `printflag=hash sha256 40900100 1000 flaghash; echo FCSC{$flaghash};`.
+I extracted part of the remote bootloader to see its secrets. The remote sha256 is `12eb7b15dc2f4aed25371a49f3048c56fda5eacb600196e3f5aa842757412c7e` and the `printflag` command is `printflag=hash sha256 40900100 1000 flaghash; echo FCSC{$flaghash};`.
 
 This is where I spent a lot of time for wrong reasons.
 
-I tried to bruteforce the flag with ghidra. As the first final password was weak, I tried many combination around the `rockyou.txt` and some derivations with the number `98`. I also ran a bruteforce attack up to 8 characters.
+I tried to bruteforce the flag with Ghidra. As the first final password was weak, I tried many combinations around the `rockyou.txt` and some derivations with the number `98`. I also ran a bruteforce attack up to 8 characters.
 
-During that time, I examined the code closely to see if there was a vulnerabilty hidden inside the code that allows to bypass the check. Nothing comes out.
+During that time, I examined the code closely to see if there was a vulnerability hidden inside the code that allows to bypass the check. Nothing comes out.
 
-I tried to look at the memory directly from the UEFI Shell but it was not working. I knew that the hash cracking was probably not the right solutions but I was not able at all to understand why it was not possible to look at the memory around `0x40900000`. Last year, it was understandable, something was connected only remotely so I thought here it was something only accessible from the bootloader and disconnected after that.
+I tried to look at the memory directly from the UEFI Shell, but it was not working. I knew that the hash cracking was probably not the right solutions, but I was not able at all to understand why it was not possible to look at the memory around `0x40900000`. Last year, it was understandable, something was connected only remotely, so I thought here it was something only accessible from the bootloader and disconnected after that.
 
-I was a little bit hopeless and it was my last hardware challenge so I decided to try to do other challenges.
+I was a little bit hopeless and it was my last hardware challenge, so I decided to try to do other challenges.
 
 ## The light at the end of the dark tunnel
 
-The day after, I started again (also because my oponent was showing off. First of all, I was not really conscious that it was possible to auto-modify the code of the UEFI. No memory regions are protected at that point.
+The day after, I started again, also because my opponent was showing off. First, I was not really conscious that it was possible to auto-modify the code of the UEFI. No memory regions are protected at that point.
 
 This is where 2 other useful commands arrives. `memmap` is useful for seeing the memory mapping and `mm` to modify the memory. This is the output of `memmap`.
 
@@ -373,7 +373,7 @@ This is where 2 other useful commands arrives. `memmap` is useful for seeing the
     Total Memory:             24 MB (25,165,824 Bytes)
 ```
 
-There are several interesting data here. One is coming from the output of the first stage bootloader: the UEFI is at 0x40200000. It is an part available inside memory. From the help page of `dmem` (see above), it is possible to have the address of the UEFI System Table which is 0x41751B88. It is inside an `RT_Code` region.
+There are several interesting data here. One is coming from the output of the first stage bootloader: the UEFI is at 0x40200000. It is a part available inside memory. From the help page of `dmem` (see above), it is possible to have the address of the UEFI System Table which is 0x41751B88. It is inside an `RT_Code` region.
 
 It is by trying to understand how `mm` was working that I figured out that the message after doing `dmem 40900100` (the memory region used to compute the flag) was really weird.
 
@@ -381,7 +381,7 @@ It is by trying to understand how `mm` was working that I figured out that the m
     dmem ACCESS DENIED: Invalid argument - '<null string>'
 ```
 
-Why is it an access denied ? Is it that it is not possible to access it or is it, in fact, not defined inside the memroy mapping even if it iswritten as so.
+Why is it access denied ? Is it that it is not possible to access it or is it, in fact, not defined inside the memory mapping even if it is written as so.
 
 Then I understood that it is still possible to access the memory just before the flag up to 0x409000fe and just after including 0x40901100. It looked really suspicious.
 
@@ -403,9 +403,9 @@ with open("efi.cpio", "ab") as efi_extracted:
         print(f"Received address 0x{i:x}-0x{i+step-1:x}, {(i-begin+step)/size*100}%")
 ```
 
-It took two downloads to have the complete file of 1008Ko. It appears to be a CPIO archive (classical format for a uImage).
+It took two downloads to have the complete file of 1008 Ko. It appears to be a CPIO archive (classical format for a uImage).
 
-I opened it in Ghidra, saw a string `dmem ACCESS DENIED` and saw the cross-reference. This piece of code is really interesting (and suspicious).
+I opened it in Ghidra, saw a string `dmem ACCESS DENIED` and saw the cross-reference. This piece of code is interesting (and suspicious).
 
 ``` c
     if ((local_30 + local_28 < (byte *)0x40900100) || (0x409010ff < local_28)) {
@@ -421,13 +421,13 @@ I opened it in Ghidra, saw a string `dmem ACCESS DENIED` and saw the cross-refer
     }
 ```
 
-So there is a hardcoded check to avoid looking at the memory at that specific place!!!! Not only the bootloader was patched but also the UEFI (the double door).
+So there is a hard-coded check to avoid looking at the memory at that specific place!!!! Not only the bootloader was patched but also the UEFI (the double door).
 
 ## Stealing the treasure
 
-Now, it is time to think as thieves and to find a way to bypass it. I have choosen to patch the UEFI directly into memory to step over this condition and be able to perform the memory extraction.
+Now, it is time to think as thieves and to find a way to bypass it. I have chosen to patch the UEFI directly into memory to step over this condition and be able to perform the memory extraction.
 
-So I used mm to modify the data stored at address 0x40239928 (to bypass the jump). However, it was not working because it is not the place where the executed code is. This is where the uImage is but it is placed elsewhere for the execution. By looking at the memory map, I figured out that the LoaderCode part size was exactly the size of the UEFI. I looked at the beginning and it was the same file. So I patched at that point 0x403BF00+000398e8 to change the jump condition of the check.
+So I used mm to modify the data stored at address 0x40239928 (to bypass the jump). However, it was not working because it is not the place where the executed code is. This is where the uImage is, but it is placed elsewhere for the execution. By looking at the memory map, I figured out that the LoaderCode part size was exactly the size of the UEFI. I looked at the beginning, and it was the same file. So I patched at that point 0x403BF00+000398e8 to change the jump condition of the check.
 
 ```
     mm 403f88e8 0x14000044 -w 4
@@ -458,7 +458,7 @@ And this is finally the second flag!!
 
 ![Profit](./wu_files/profit.jpg)
 
-As a summary, this is a memory map of what is really interesting here.
+As a summary, this is a memory map of what is interesting here.
 
 ```
     0x00000000-0x0008b198 : ROM (with u-boot)
@@ -467,7 +467,7 @@ As a summary, this is a memory map of what is really interesting here.
     0x41751000-0x417dc198 : RAM u-boot
 ```
 
-A good rest after finally locking this category... So this was a really nice challenge ! A big thanks to `erdnaxe` for the challenge (and to th eorganisers).
+A good rest after finally locking this category... So this was a really nice challenge ! A big thanks to `erdnaxe` for the challenge (and to the organisers).
 
 ## Some interesting gold nuggets
 
