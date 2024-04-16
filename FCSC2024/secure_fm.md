@@ -16,8 +16,8 @@ What is interesting here are the GnuRadio flowgraphs of those challenges.
 
 When begining those kind of challenges, it is always a good option to open them inside [inspectrum](https://github.com/miek/inspectrum) to see the structure of the signal. The data is encoded with complex 32-bit floating point samples so the extension to choose before opening them is `*.cf32`.
 
-![Inspectrum simple FM](./wu_files/simple-fm-graph.png)
-![Inspectrum secure FM](./wu_files/secure-fm-graph.png)
+![Inspectrum simple FM](./wu_files/inspectrum_simple_fm.png)
+![Inspectrum secure FM](./wu_files/inspectrum_secure_fm.png)
 
 So here, the X axis represents time and Y axis frequencies. More red a region is, more this frequency is there at that amount of time. On the simple FM, it is clearly horizontal lines which means that it is the same frequency during a given amount of time. This frequency is changing over time but takes only a finite number of different values. For simple FM, only 4 values are possible.
 
