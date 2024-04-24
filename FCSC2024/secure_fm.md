@@ -5,7 +5,7 @@ Write-up by *loulous24* **CC-BY-SA 4.0**
 
 ## Introduction
 
-Simple FM and Secure FM is a series of challenges of the FCSC 2023 in the hardware category. Those challenges have been solved around 20 and 30 times, but I make this write-up to do some mathematical explanation and see how it is possible to finish them with a small amount of blocks and using [GNU Radio](https://www.gnuradio.org/) only.
+Simple FM and Secure FM is a series of challenges of the FCSC 2024 in the hardware category. Those challenges have been solved around 20 and 30 times, but I make this write-up to do some mathematical explanation and see how it is possible to finish them with a small amount of blocks and using [GNU Radio](https://www.gnuradio.org/) only.
 
 What is interesting here are the GNU Radio flowgraphs of those challenges.
 
