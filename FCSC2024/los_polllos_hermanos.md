@@ -520,9 +520,3 @@ flag = io.readlineS(keepends=False)
 
 print(flag)
 ```
-
-## Interesting sources to look at
-
-- [A visual video about the Fourier decomposition (in French)](https://www.youtube.com/watch?v=uazPP0ny3XQ)
-- [Introduction of Fourier transform by 3Blue1Brown](https://www.youtube.com/watch?v=spUNpyF58BY)
-- [GNU Radio wiki](https://wiki.gnuradio.org/index.php/Main_Page)
