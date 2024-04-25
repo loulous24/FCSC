@@ -335,14 +335,14 @@ v_{1}^i\\
 v_{15}^i
 \end{matrix}\right) =
 \left(\begin{matrix}
-x_{0}^i + k_{0}^i\texttt{C}\\
+x_{0}^i + k_{0}^i\texttt{0xfffffffb}\\
 x_{1}^i + k_{1}^i\texttt{0xfffffffb}\\
 \vdots \\
 x_{15}^i + k_{15}^i\texttt{0xfffffffb}
 \end{matrix}\right)
 $$
 
-with $\left(x_j^i\right)_{j \in \llbracket 0, \dots, 15\rrbracket}$ values between 0 and 255 and $\left(k_j^i\right)_{j \in \llbracket 0, \dots, 15\rrbracket}$ integers.
+with $\left(x_j^i\right)_{j \in [0, \dots, 15]}$ values between 0 and 255 and $\left(k_j^i\right)_{j \in [0, \dots, 15]}$ integers.
 
 It is a [Closest Vector Problem](https://en.wikipedia.org/wiki/Lattice_problem) (CVP) modulo the integer `0xfffffffb`.
 
