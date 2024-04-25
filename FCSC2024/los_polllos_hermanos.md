@@ -327,24 +327,24 @@ m_{0,1}^i & m_{1,1}^i & \dots & m_{15,1}^i \\
 \vdots & \vdots & \ddots & \vdots \\
 m_{0,15}^i & m_{1,15}^i & \dots & m_{15,15}^i
 \end{matrix}\right)
-
+.
 \left(\begin{matrix}
 v_{0}^i\\
 v_{1}^i\\
 \vdots \\
 v_{15}^i
-\end{matrix}\right) = 
-
+\end{matrix}\right) =
 \left(\begin{matrix}
-x_{0}^i + k_{0}^i\texttt{0xfffffffb}\\
+x_{0}^i + k_{0}^i\texttt{C}\\
 x_{1}^i + k_{1}^i\texttt{0xfffffffb}\\
 \vdots \\
 x_{15}^i + k_{15}^i\texttt{0xfffffffb}
 \end{matrix}\right)
 $$
+
 with $\left(x_j^i\right)_{j \in \llbracket 0, \dots, 15\rrbracket}$ values between 0 and 255 and $\left(k_j^i\right)_{j \in \llbracket 0, \dots, 15\rrbracket}$ integers.
 
-It is a [Closest Vector Problem](https://en.wikipedia.org/wiki/Lattice_problem) (CVP).
+It is a [Closest Vector Problem](https://en.wikipedia.org/wiki/Lattice_problem) (CVP) modulo the integer `0xfffffffb`.
 
 
 ### Lattice theory
@@ -442,7 +442,7 @@ A lattice is defined and reduce and Babai is called to find the CVP.
 
 ### LLL direct reduction
 
-The LLL finds columns that are as small as possible, so it does not fit well with CVP. A trick is to add the opposite of the target as a column and to add a row with a big weight that will check that is column is taken at most one time. As LLL returns a basis, it is assured that at least for one vector, this line will not be zero. The goal is to have this vector equals to the willed result.
+The LLL finds columns that are as small as possible, so it does not fit well with CVP. A trick is to add the opposite of the target as a column and to add a row with a big weight that will assure that this column is taken at most one time. As LLL returns a basis, it is assured that at least for one vector, this line will not be zero. The goal is to have the vector where the first row is not zero equals to the willed result.
 
 $$
 \left(\begin{matrix}
@@ -458,9 +458,9 @@ WEIGHT & 0 & 0 & \dots & 0 & 0 & 0 & \dots & 0 \\
 \end{matrix}\right)
 $$
 
-The result is expected to be between -128 and 128 for each row and the first row should be $WEIGHT$ or $-WEIGHT$ (and the result is the opposite).
+The result is expected to be between -128 and 128 for each row and the first row should be $WEIGHT$ or $-WEIGHT$ (in this case the willed result is the opposite).
 
-Here the columns 17 to 33 hold the input making the result of the multiplication low.
+Here the columns 17 to 33 hold $(v_{0}, v_{1}, \dots, v_{15})$ making the result of the multiplication low.
 
 ```py
 results_LLL = []
